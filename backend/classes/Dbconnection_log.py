@@ -1,4 +1,5 @@
 import mysql.connector
+import os
 
 class Dbconnection():
 
@@ -9,18 +10,11 @@ class Dbconnection():
 class MYSQL(Dbconnection):
 	def __init__(self):
 
-		self.ip = '127.0.0.1'
-		# self.ip = 'db'
-		self.pw = 'ke19291929'
-		self.db = 'dashlog'
-		self.user = 'root'
-		self.port = '3306'		
-		
-		# self.ip = 'db'
-		# self.pw = 'Hi12345678!'
-		# self.db = 'dashlog'
-		# self.user = 'ke'
-		# self.port = '3306'
+		self.ip = os.environ.get("SQL_HOST","127.0.0.1")
+		self.pw = os.environ.get("SQL_PASSWORD","Logger123")
+		self.db = os.environ.get("MYSQL_DATABASE","dashlog")
+		self.user = os.environ.get("SQL_USER","Logger")
+		self.port = os.environ.get("SQL_PORT","3306")	
 
 	def getData(self,dict, sql, params = []):
 		res = None
