@@ -18,11 +18,11 @@ Im Folgenden wir erklärt, wie die Anwendung gestartet wird
    ```bash
    cd DashLog3
    ```
-3. **Starten der Container:**
+3. **Starten der Produktiv-Container:**
    ```bash
    docker-compose -f docker-compose.prod.yml up --build
    ```
-4. **Stoppen der Container:**
+4. **Stoppen der Produktiv-Container:**
    ```bash
    docker-compose -f docker-compose.prod.yml down -v
    ```
