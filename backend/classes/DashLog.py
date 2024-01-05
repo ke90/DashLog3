@@ -8,7 +8,7 @@ import json
 
 class DashLog:
     def __init__(self):
-        self.url = 'http://localhost:8000/logger/webhook_receiver2/'
+        self.url = 'http://127.0.0.1:1337/api/logger/webhook_receiver2/'
         self.data = {
             'id_app': 1,
         }
