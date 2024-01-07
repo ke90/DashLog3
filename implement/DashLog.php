@@ -5,7 +5,7 @@ class DashLog {
     private $data;
 
     public function __construct() {
-        $this->url = 'http://localhost:8000/logger/webhook_receiver2/';
+        $this->url = 'http://127.0.0.1:1337/api/logger/webhook2/';
         $this->data = array('id_app' => 1);
     }
 

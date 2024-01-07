@@ -21,15 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-jzo#%ob7qop0+hf6*ihzxpxf4wi3)mwk$xuls$bg+t&c#qh4@t'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get('DEBUG', default=0))
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(" ")
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
@@ -132,16 +133,16 @@ WSGI_APPLICATION = 'core.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'vorlage',
-        'USER': 'root',
-        'PASSWORD': 'ke19291929',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'vorlage',
+#         'USER': 'root',
+#         'PASSWORD': 'ke19291929',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -195,6 +196,11 @@ CORS_ALLOW_ALL_ORIGINS: True
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Fügen Sie hier die URL Ihrer React-Anwendung hinzu
+    'http://localhost:1337',  # Fügen Sie hier die URL Ihrer React-Anwendung hinzu
     'http://frontend:3000',  # Fügen Sie hier die URL Ihrer React-Anwendung hinzu
+    'http://127.0.0.1:3000',  # Fügen Sie hier die URL Ihrer React-Anwendung hinzu
+    'http://127.0.0.1:1337',  # Fügen Sie hier die URL Ihrer React-Anwendung hinzu
+    'http://localhost:1337/api/',  # Fügen Sie hier die URL Ihrer React-Anwendung hinzu
+    'http://localhost:1337/api',  # Fügen Sie hier die URL Ihrer React-Anwendung hinzu
 ]
 
