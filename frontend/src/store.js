@@ -2,10 +2,12 @@ import { legacy_createStore as createStore, combineReducers, applyMiddleware } f
 import thunk from 'redux-thunk'
 import { composeWithDevTools} from 'redux-devtools-extension'
 import { userReducer } from './reducers/userReducer'
+import { appsReducer } from './reducers/appsReducer'
 
 
 const reducer = combineReducers({
     user: userReducer,
+    apps: appsReducer,
 })
 
 const initialState = {}

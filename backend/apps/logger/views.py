@@ -53,8 +53,8 @@ def load_logs(request):
 
     # print(fehlerproMonat)
 
-    sql = '''SELECT id, app FROM dashlog.apps'''
-    apps = dbconnection.getData(True,sql,[])
+    # sql = '''SELECT id, app FROM dashlog.apps'''
+    # apps = dbconnection.getData(True,sql,[])
     # print(apps)
 
     sql = '''SELECT 
@@ -77,11 +77,18 @@ def load_logs(request):
         "data": data,
         "kennzahlen": kennzahlen,
         "chart_failproApp": chart_failproApp,
-        "apps": apps,
+        # "apps": apps,
         "fehlerproMonat": fehlerproMonat,
         "activityperh": activityperh
     }
 
     return JsonResponse({"data":combined_data})
+
+@csrf_exempt
+def load_apps(request):
+    sql = '''SELECT id, app FROM dashlog.apps'''
+    data = dbconnection.getData(True,sql,[])
+
+    return JsonResponse({"data":data})
 
 

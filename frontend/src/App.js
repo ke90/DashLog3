@@ -1,18 +1,19 @@
 import './App.css';
 import { Button } from 'react-bootstrap';
-import Logout from './components/Login/Logout'; 
-import ProfilView from './components/Login/ProfilView'; 
-import NavBar from './components/NavBar'; 
 import React, { useState,useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import checkTokenUser from './utils/validators';
 import { useDispatch } from 'react-redux';
 import LogTable from './components/Logger/LogTable';
+import { listApps } from './actions/appsAction';
 
 
 function App() {
+  const dispatch = useDispatch();
+  //const apps = useSelector(state => state.apps.data);
 
-
+  useEffect(() => {
+    dispatch(listApps());
+  }, [dispatch]);
 
 
   return (

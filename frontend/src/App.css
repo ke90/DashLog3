@@ -92,4 +92,15 @@
 
 .card:hover .custom-flip-numbers {
   color: white!important; /* Farbe des Textes beim Hover */
-} 
+}
+
+.appClick:hover{
+  background-color: #3a63b6c1;
+  color:white;
+  cursor: pointer;
+}
+
+.selected{
+  background-color: #3a63b6c1;
+  color:white;
+}

@@ -8,6 +8,9 @@ import Kennzahlen from './Kennzahlen';
 import Chart_failproApp2 from './Chart_failproApp2';
 import Chart_failproMonat from './Chart_failproMonat';
 import Chart_appActivity from './Chart_appActivity';
+import AppSettings from './AppSettings';
+import { useSelector } from 'react-redux';
+
 
 function LogTable() {
 
@@ -23,14 +26,26 @@ function LogTable() {
     const [anzahl1Jahr, setAnzahl1Jahr] = useState(0);
     const [activityperh, setactivityperh] = useState(0);
     const [showOffcanvas, setShowOffcanvas] = useState(false);
-    const [apps, setApps] = useState([]);
+    //const [apps, setApps] = useState([]);
+    const apps = useSelector(state => state.apps.apps);
     const [selectedRow, setSelectedRow] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [filterTimestamp, setFilterTimestamp] = useState('');
+    const [isModalSettingsOpen, setModalSettings] = useState(false);
+
+    // useEffect(() => {
+    //     console.log(apps)    
+    // }, [apps]);
+
+    const handleDownloadClick = () => {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = '/DashLog.zip'; // Passe den Dateinamen entsprechend an
+        downloadLink.download = 'DashLog.zip'; // Passe den Dateinamen entsprechend an
+        downloadLink.click();
+    };
 
 
     const handleRowClick = (row) => {
-        console.log(row)
         setSelectedRow(row);
         setShowModal(true);
     };
@@ -50,6 +65,14 @@ function LogTable() {
     
     const handleOffcanvasToggle = () => {
       setShowOffcanvas(!showOffcanvas);
+    };
+
+    const handleModalSettings = () => {
+        setModalSettings(true)
+    };
+
+    const handleModalSettingsClose = () => {
+        setModalSettings(false);
     };
    
 
@@ -152,9 +175,9 @@ function LogTable() {
                     if(response.data.data.fehlerproMonat){
                         setfehlerproMonat(response.data.data.fehlerproMonat);
                     }
-                    if(response.data.data.apps){
-                        setApps(response.data.data.apps);
-                    }
+                    // if(response.data.data.apps){
+                        //setApps(response.data.data.apps);
+                    // }
 
                     const eventSource = new EventSource('http://127.0.0.1:8000/logger/stream_events/');
         
@@ -254,10 +277,16 @@ function LogTable() {
             <div className='mb-4'>
                 <Kennzahlen Tag={anzahl1Tag} Woche={anzahl1Woche} Monat={anzahl1Monat} Jahr={anzahl1Jahr} setFilterTimestamp={setFilterTimestamp} setFilterType={setFilterType} filterTimestamp={filterTimestamp}/>  
             </div>
-            <Row className="justify-content-end">
+            <Row className="justify-content-end mb-3">
                 <Col xs="auto">
                 <Button variant="primary" onClick={handleOffcanvasToggle}>
                     Live Dashboard
+                </Button>
+                <Button variant="primary ms-3" onClick={handleModalSettings}>
+                    App Settings
+                </Button>
+                <Button variant="primary ms-3" onClick={handleDownloadClick}>
+                    Download Dashlog-Klassen
                 </Button>
                 </Col>
             </Row>
@@ -355,6 +384,25 @@ function LogTable() {
     </Modal.Body>
     <Modal.Footer>
         <Button variant="secondary" onClick={handleCloseModal}>
+        Schließen
+        </Button>
+    </Modal.Footer>
+    </Modal>
+
+
+    <Modal show={isModalSettingsOpen} onHide={handleModalSettingsClose} size='lg'>
+    <Modal.Header closeButton>
+        <Modal.Title>App Settings</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+        {apps && (
+        <div>
+            <AppSettings />
+        </div>
+        )}
+    </Modal.Body>
+    <Modal.Footer>
+        <Button variant="secondary" onClick={handleModalSettingsClose}>
         Schließen
         </Button>
     </Modal.Footer>
