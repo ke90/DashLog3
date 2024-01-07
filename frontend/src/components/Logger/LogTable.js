@@ -11,18 +11,6 @@ import Chart_appActivity from './Chart_appActivity';
 import AppSettings from './AppSettings';
 import { useSelector } from 'react-redux';
 
-import React, { useState, useEffect } from "react";
-import DataTable from "react-data-table-component";
-import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faCheckCircle,faExclamationTriangle,} from "@fortawesome/free-solid-svg-icons";
-import {Form,Row,Col,Offcanvas,Button,Modal,Badge,
-} from "react-bootstrap";
-import Kennzahlen from "./Kennzahlen";
-import Chart_failproApp2 from "./Chart_failproApp2";
-import Chart_failproMonat from "./Chart_failproMonat";
-import Chart_appActivity from "./Chart_appActivity";
-
 function LogTable() {
 
     const [tableData, setTableData] = useState([]);
