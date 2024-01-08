@@ -25,7 +25,7 @@ function LogTable() {
     const [anzahl1Jahr, setAnzahl1Jahr] = useState(0);
     const [activityperh, setactivityperh] = useState(0);
     const [showOffcanvas, setShowOffcanvas] = useState(false);
-    //const [apps, setApps] = useState([]);
+    // const [apps, setApps] = useState([]);
     const apps = useSelector(state => state.apps.apps);
     const [selectedRow, setSelectedRow] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -176,9 +176,10 @@ function LogTable() {
           if (response.data.data.fehlerproMonat) {
             setfehlerproMonat(response.data.data.fehlerproMonat);
           }
-          if (response.data.data.apps) {
-            setApps(response.data.data.apps);
-          }
+          
+        //   if (response.data.data.apps) {
+        //     setApps(response.data.data.apps);
+        //   }
 
           const eventSource = new EventSource(
             "http://127.0.0.1:1337/api/logger/stream_events/"
