@@ -26,7 +26,6 @@ function LogTable() {
     const [anzahl1Jahr, setAnzahl1Jahr] = useState(0);
     const [activityperh, setactivityperh] = useState(0);
     const [showOffcanvas, setShowOffcanvas] = useState(false);
-    // const [apps, setApps] = useState([]);
     const apps = useSelector(state => state.apps.apps);
     const [selectedRow, setSelectedRow] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -39,8 +38,8 @@ function LogTable() {
 
     const handleDownloadClick = () => {
         const downloadLink = document.createElement('a');
-        downloadLink.href = '/DashLog.zip'; // Passe den Dateinamen entsprechend an
-        downloadLink.download = 'DashLog.zip'; // Passe den Dateinamen entsprechend an
+        downloadLink.href = '/DashLog.zip';
+        downloadLink.download = 'DashLog.zip';
         downloadLink.click();
     };
 
@@ -80,7 +79,7 @@ function LogTable() {
   const formatDateToGerman = (isoDate) => {
     const date = new Date(isoDate);
     const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Monate sind 0-basiert
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
     const hours = date.getHours().toString().padStart(2, "0");
     const minutes = date.getMinutes().toString().padStart(2, "0");
@@ -103,10 +102,6 @@ function LogTable() {
     }
 
     if (filterType) {
-      // alert(filterType)
-      // if(filterType == '1' || filterType == '' ){
-      //     setFilterTimestamp('')
-      // }
       filtered = filtered.filter((row) => row.type_id.toString() == filterType);
     }
 
@@ -131,7 +126,6 @@ function LogTable() {
           timestampLimit = now;
       }
 
-      // const timestampLimitGermanFormat = formatDateToGerman(timestampLimit);
       if (filterTimestamp) {
         filtered = filtered.filter((row) => {
           const rowDate = new Date(row.timestamp);
@@ -176,10 +170,6 @@ function LogTable() {
           if (response.data.data.fehlerproMonat) {
             setfehlerproMonat(response.data.data.fehlerproMonat);
           }
-          
-        //   if (response.data.data.apps) {
-        //     setApps(response.data.data.apps);
-        //   }
 
           // const eventSource = new EventSource("http://127.0.0.1:1337/api/logger/stream_events/");
           const eventSource = new EventSource(url_backend + "/api/logger/stream_events/");

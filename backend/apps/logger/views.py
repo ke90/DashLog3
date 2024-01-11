@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseServerError
 from classes.Dbconnection_log import MYSQL
 from django.views.decorators.csrf import csrf_exempt
-
+import json
 
 dbconnection = MYSQL()
 
@@ -91,4 +91,68 @@ def load_apps(request):
 
     return JsonResponse({"data":data})
 
+@csrf_exempt
+def insert_app(request):
+    data = json.loads(request.body)
+    new_app_name = None
+    if data and isinstance(data, list) and isinstance(data[0], dict):
+        new_app_name = data[0].get('appName')
+    if(new_app_name):
+
+        sql = '''INSERT INTO dashlog.apps (app)VALUES(%s)'''
+        result = dbconnection.modifyData(sql,True,[new_app_name])
+
+        print(result)
+        if(result):
+            return JsonResponse({},status=200)
+        else:
+            return JsonResponse({},status=400)
+    else:
+        return JsonResponse({},status=400)
+
+    
+@csrf_exempt
+def change_app(request):
+
+    data = json.loads(request.body)
+    print(data)
+    id = None
+    app = None
+    if data and isinstance(data, list) and isinstance(data[0], dict):
+        id = data[0].get('id')
+        app = data[0].get('app')
+
+        sql = '''UPDATE dashlog.apps SET app = %s WHERE id = %s'''
+        result = dbconnection.modifyData(sql,True,[app,id])
+        if(result == 0):
+            return JsonResponse({},status=200)
+        else:
+            return JsonResponse({},status=400)
+    else:
+        return JsonResponse({},status=400)
+
+    
+@csrf_exempt
+def delete_app(request):
+    data = json.loads(request.body)
+    id = None
+    if data and isinstance(data, list) and isinstance(data[0], dict):
+        id = data[0].get('id')
+
+        sql = '''DELETE FROM dashlog.apps WHERE id = %s'''
+        result = dbconnection.modifyData(sql,True,[id])
+        print(result)
+
+        if result == 0:
+            print("drin")
+            sql = '''DELETE FROM dashlog.logger WHERE id_app = %s'''
+            endresult = dbconnection.modifyData(sql,True,[id])
+            if endresult == 0:
+                return JsonResponse({},status=200)
+            else:
+                return JsonResponse({},status=400)
+        else:
+            return JsonResponse({},status=400)
+    else:
+        return JsonResponse({},status=400)
 
