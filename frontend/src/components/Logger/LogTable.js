@@ -10,6 +10,7 @@ import Chart_failproMonat from './Chart_failproMonat';
 import Chart_appActivity from './Chart_appActivity';
 import AppSettings from './AppSettings';
 import { useSelector } from 'react-redux';
+import url_backend from '../../config'
 
 function LogTable() {
 
@@ -150,9 +151,8 @@ function LogTable() {
 
     const startProcess = async () => {
       try {
-        const response = await axios.post(
-          "http://127.0.0.1:1337/api/logger/load_logs/"
-        );
+        const response = await axios.post(url_backend + "/api/logger/load_logs/");
+        // const response = await axios.post("http://127.0.0.1:1337/api/logger/load_logs/");
 
         if (response.status === 200) {
           console.log("Initiales Laden der Daten erfolgreich");
@@ -181,9 +181,8 @@ function LogTable() {
         //     setApps(response.data.data.apps);
         //   }
 
-          const eventSource = new EventSource(
-            "http://127.0.0.1:1337/api/logger/stream_events/"
-          );
+          // const eventSource = new EventSource("http://127.0.0.1:1337/api/logger/stream_events/");
+          const eventSource = new EventSource(url_backend + "/api/logger/stream_events/");
 
           eventSource.onmessage = function (event) {
             // console.log(event.data)

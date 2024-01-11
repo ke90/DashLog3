@@ -4,6 +4,7 @@ import json
 
 # Die URL Ihres Webhook-Endpoints
 url = 'http://127.0.0.1:1337/api/logger/webhook2/'
+url = 'http://127.0.0.1:8000/api/logger/webhook2/'
 
 # Die zu sendenden Daten
 

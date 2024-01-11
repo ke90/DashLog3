@@ -6,7 +6,6 @@ class Dbconnection():
 	def __init__(self):
 		print("connection")
 	
-
 class MYSQL(Dbconnection):
 	def __init__(self):
 
