@@ -1,81 +1,89 @@
-import React, { useState,useEffect } from 'react';
-import DataTable from 'react-data-table-component';
-import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { Form, Row, Col, Offcanvas, Button, Modal,Badge } from 'react-bootstrap';
-import Kennzahlen from './Kennzahlen';
-import Chart_failproApp2 from './Chart_failproApp2';
-import Chart_failproMonat from './Chart_failproMonat';
-import Chart_appActivity from './Chart_appActivity';
-import AppSettings from './AppSettings';
-import { useSelector } from 'react-redux';
-import url_backend from '../../config'
+import React, { useState, useEffect } from "react";
+import DataTable from "react-data-table-component";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCheckCircle,
+  faExclamationTriangle,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  Form,
+  Row,
+  Col,
+  Offcanvas,
+  Button,
+  Modal,
+  Badge,
+} from "react-bootstrap";
+import Kennzahlen from "./Kennzahlen";
+import Chart_failproApp2 from "./Chart_failproApp2";
+import Chart_failproMonat from "./Chart_failproMonat";
+import Chart_appActivity from "./Chart_appActivity";
+import AppSettings from "./AppSettings";
+import { useSelector } from "react-redux";
+import url_backend from "../../config";
 
 function LogTable() {
+  const [tableData, setTableData] = useState([]);
+  const [chart_failproApp, setchart_failproApp] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [fehlerproMonat, setfehlerproMonat] = useState([]);
+  const [filterApp, setFilterApp] = useState("");
+  const [filterType, setFilterType] = useState("");
+  const [anzahl1Tag, setAnzahl1Tag] = useState(0);
+  const [anzahl1Woche, setAnzahl1Woche] = useState(0);
+  const [anzahl1Monat, setAnzahl1Monat] = useState(0);
+  const [anzahl1Jahr, setAnzahl1Jahr] = useState(0);
+  const [activityperh, setactivityperh] = useState(0);
+  const [showOffcanvas, setShowOffcanvas] = useState(false);
+  const apps = useSelector((state) => state.apps.apps);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [filterTimestamp, setFilterTimestamp] = useState("");
+  const [isModalSettingsOpen, setModalSettings] = useState(false);
 
-    const [tableData, setTableData] = useState([]);
-    const [chart_failproApp, setchart_failproApp] = useState([]);
-    const [filteredData, setFilteredData] = useState([]);
-    const [fehlerproMonat, setfehlerproMonat] = useState([]);
-    const [filterApp, setFilterApp] = useState('');
-    const [filterType, setFilterType] = useState('');
-    const [anzahl1Tag, setAnzahl1Tag] = useState(0);
-    const [anzahl1Woche, setAnzahl1Woche] = useState(0);
-    const [anzahl1Monat, setAnzahl1Monat] = useState(0);
-    const [anzahl1Jahr, setAnzahl1Jahr] = useState(0);
-    const [activityperh, setactivityperh] = useState(0);
-    const [showOffcanvas, setShowOffcanvas] = useState(false);
-    const apps = useSelector(state => state.apps.apps);
-    const [selectedRow, setSelectedRow] = useState(null);
-    const [showModal, setShowModal] = useState(false);
-    const [filterTimestamp, setFilterTimestamp] = useState('');
-    const [isModalSettingsOpen, setModalSettings] = useState(false);
+  // useEffect(() => {
+  //     console.log(apps)
+  // }, [apps]);
 
-    // useEffect(() => {
-    //     console.log(apps)    
-    // }, [apps]);
+  const handleDownloadClick = () => {
+    const downloadLink = document.createElement("a");
+    downloadLink.href = "/DashLog.zip";
+    downloadLink.download = "DashLog.zip";
+    downloadLink.click();
+  };
 
-    const handleDownloadClick = () => {
-        const downloadLink = document.createElement('a');
-        downloadLink.href = '/DashLog.zip';
-        downloadLink.download = 'DashLog.zip';
-        downloadLink.click();
-    };
+  const handleRowClick = (row) => {
+    console.log(row);
+    setSelectedRow(row);
+    setShowModal(true);
+  };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
 
+  const customStyles = {
+    rows: {
+      cursor: "pointer", // Ändere den Cursor in einen Zeiger
+      "&:hover": {
+        backgroundColor: "#f0f0f0", // Hintergrundfarbe ändern, wenn die Zeile gehovert wird
+      },
+    },
+  };
 
-    const handleRowClick = (row) => {
-        console.log(row);
-        setSelectedRow(row);
-        setShowModal(true);
-    };
+  const handleOffcanvasToggle = () => {
+    setShowOffcanvas(!showOffcanvas);
+  };
 
-    const handleCloseModal = () => {
-        setShowModal(false);
-    };
-        
-    const customStyles = {
-        rows: {
-        cursor: "pointer", // Ändere den Cursor in einen Zeiger
-        "&:hover": {
-            backgroundColor: "#f0f0f0", // Hintergrundfarbe ändern, wenn die Zeile gehovert wird
-        },
-        },
-    };
+  const handleModalSettings = () => {
+    setModalSettings(true);
+  };
 
-    const handleOffcanvasToggle = () => {
-        setShowOffcanvas(!showOffcanvas);
-    };
+  const handleModalSettingsClose = () => {
+    setModalSettings(false);
+  };
 
-    const handleModalSettings = () => {
-        setModalSettings(true)
-    };
-
-    const handleModalSettingsClose = () => {
-        setModalSettings(false);
-    };
-   
   const formatDateToGerman = (isoDate) => {
     const date = new Date(isoDate);
     const day = date.getDate().toString().padStart(2, "0");
@@ -145,7 +153,9 @@ function LogTable() {
 
     const startProcess = async () => {
       try {
-        const response = await axios.post(url_backend + "/api/logger/load_logs/");
+        const response = await axios.post(
+          url_backend + "/api/logger/load_logs/"
+        );
         // const response = await axios.post("http://127.0.0.1:1337/api/logger/load_logs/");
 
         if (response.status === 200) {
@@ -172,7 +182,9 @@ function LogTable() {
           }
 
           // const eventSource = new EventSource("http://127.0.0.1:1337/api/logger/stream_events/");
-          const eventSource = new EventSource(url_backend + "/api/logger/stream_events/");
+          const eventSource = new EventSource(
+            url_backend + "/api/logger/stream_events/"
+          );
 
           eventSource.onmessage = function (event) {
             // console.log(event.data)
@@ -263,70 +275,93 @@ function LogTable() {
   ];
 
   return (
+    <div className="m-5">
+      <div className="mb-4">
+        <Kennzahlen
+          Tag={anzahl1Tag}
+          Woche={anzahl1Woche}
+          Monat={anzahl1Monat}
+          Jahr={anzahl1Jahr}
+          setFilterTimestamp={setFilterTimestamp}
+          setFilterType={setFilterType}
+          filterTimestamp={filterTimestamp}
+        />
+      </div>
+      <Row className="justify-content-end mb-3">
+        <Col xs="auto">
+          <Button variant="primary" onClick={handleOffcanvasToggle}>
+            Live Dashboard
+          </Button>
+          <Button variant="primary ms-3" onClick={handleModalSettings}>
+            App Settings
+          </Button>
+          <Button variant="primary ms-3" onClick={handleDownloadClick}>
+            Download Dashlog-Klassen
+          </Button>
+        </Col>
+      </Row>
+      <div className="filter-container">
+        <Form>
+          <Row>
+            <Col md={4}>
+              <Form.Group controlId="filterApp">
+                <Form.Label>App</Form.Label>
+                <Form.Select
+                  value={filterApp}
+                  onChange={(e) => setFilterApp(e.target.value)}
+                >
+                  <option value="">Alle Apps</option>
+                  {apps &&
+                    apps.map((app) => (
+                      <option key={app.id} value={app.id}>
+                        {app.app}
+                      </option>
+                    ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col md={4}>
+              <Form.Group controlId="filterType">
+                <Form.Label>Message</Form.Label>
+                <Form.Select
+                  value={filterType}
+                  onChange={(e) => setFilterType(e.target.value)}
+                >
+                  <option value="">Alle Messages</option>
+                  <option value="1">Success</option>
+                  <option value="2">Fail</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
 
-
-    <div className='m-5'>
-            <div className='mb-4'>
-                <Kennzahlen Tag={anzahl1Tag} Woche={anzahl1Woche} Monat={anzahl1Monat} Jahr={anzahl1Jahr} setFilterTimestamp={setFilterTimestamp} setFilterType={setFilterType} filterTimestamp={filterTimestamp}/>  
-            </div>
-            <Row className="justify-content-end mb-3">
-                <Col xs="auto">
-                <Button variant="primary" onClick={handleOffcanvasToggle}>
-                    Live Dashboard
-                </Button>
-                <Button variant="primary ms-3" onClick={handleModalSettings}>
-                    App Settings
-                </Button>
-                <Button variant="primary ms-3" onClick={handleDownloadClick}>
-                    Download Dashlog-Klassen
-                </Button>
-                </Col>
-            </Row>
-            <div className="filter-container">
-            <Form>
-                <Row>
-                    <Col md={4}>
-                        <Form.Group controlId="filterApp">
-                            <Form.Label>App</Form.Label>
-                            <Form.Select value={filterApp} onChange={(e) => setFilterApp(e.target.value)}>
-                                <option value="">Alle Apps</option>
-                                {apps && apps.map(app => (
-                                    <option key={app.id} value={app.id}>{app.app}</option>
-                                ))}
-                            </Form.Select>
-                        </Form.Group>
-                    </Col>
-                    <Col md={4}>
-                        <Form.Group controlId="filterType">
-                            <Form.Label>Message</Form.Label>
-                            <Form.Select 
-                                value={filterType} 
-                                onChange={(e) => setFilterType(e.target.value)}
-                            >
-                                <option value="">Alle Messages</option>
-                                <option value="1">Success</option>
-                                <option value="2">Fail</option>
-                            </Form.Select>
-                        </Form.Group>
-                    </Col>
-
-                    <Col md={4}>
-                        <Form.Group controlId="filterTimestamp">
-                            <Form.Label>Zeitstempel</Form.Label>
-                            <Form.Select value={filterTimestamp} onChange={(e) => setFilterTimestamp(e.target.value)}>
-                                <option value="">Alle Zeiten</option>
-                                <option value="24h">Letzte 24 Stunden</option>
-                                <option value="1w">Letzte Woche</option>
-                                <option value="1m">Letzter Monat</option>
-                                <option value="1y">Letztes Jahr</option>
-                            </Form.Select>
-                        </Form.Group>
-                    </Col>
-                </Row>
-            </Form>
-
-            </div>
-        <DataTable columns={columns} pagination paginationPerPage={10} paginationRowsPerPageOptions={[10, 20, 30, 50, 100, 500]} data={filteredData} onRowClicked={handleRowClick} customStyles={customStyles} className="custom-data-table" />
+            <Col md={4}>
+              <Form.Group controlId="filterTimestamp">
+                <Form.Label>Zeitstempel</Form.Label>
+                <Form.Select
+                  value={filterTimestamp}
+                  onChange={(e) => setFilterTimestamp(e.target.value)}
+                >
+                  <option value="">Alle Zeiten</option>
+                  <option value="24h">Letzte 24 Stunden</option>
+                  <option value="1w">Letzte Woche</option>
+                  <option value="1m">Letzter Monat</option>
+                  <option value="1y">Letztes Jahr</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+      <DataTable
+        columns={columns}
+        pagination
+        paginationPerPage={10}
+        paginationRowsPerPageOptions={[10, 20, 30, 50, 100, 500]}
+        data={filteredData}
+        onRowClicked={handleRowClick}
+        customStyles={customStyles}
+        className="custom-data-table"
+      />
 
       <Offcanvas
         show={showOffcanvas}
@@ -380,38 +415,41 @@ function LogTable() {
                     size="xl"
                   />
                 ) : null}
-                </p>
-            <p>Uhrzeit: {formatDateToGerman(selectedRow.timestamp)}</p>
-            <p>Meldung: {selectedRow.message_text}</p>
-            {/* Weitere Datenfelder hier anzeigen */}
-        </div>
-        )}
-    </Modal.Body>
-    <Modal.Footer>
-        <Button variant="secondary" onClick={handleCloseModal}>
-        Schließen
-        </Button>
-    </Modal.Footer>
-    </Modal>
+              </p>
+              <p>Uhrzeit: {formatDateToGerman(selectedRow.timestamp)}</p>
+              <p>Meldung: {selectedRow.message_text}</p>
+              {/* Weitere Datenfelder hier anzeigen */}
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Schließen
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
-
-    <Modal show={isModalSettingsOpen} onHide={handleModalSettingsClose} size='lg'>
-    <Modal.Header closeButton>
-        <Modal.Title>App Settings</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-        {apps && (
-        <div>
-            <AppSettings />
-        </div>
-        )}
-    </Modal.Body>
-    <Modal.Footer>
-        <Button variant="secondary" onClick={handleModalSettingsClose}>
-        Schließen
-        </Button>
-    </Modal.Footer>
-    </Modal>
+      <Modal
+        show={isModalSettingsOpen}
+        onHide={handleModalSettingsClose}
+        size="lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>App Settings</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {apps && (
+            <div>
+              <AppSettings />
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleModalSettingsClose}>
+            Schließen
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

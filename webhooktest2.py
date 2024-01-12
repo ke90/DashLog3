@@ -4,14 +4,14 @@ import json
 
 # Die URL Ihres Webhook-Endpoints
 url = 'http://127.0.0.1:1337/api/logger/webhook2/'
-url = 'http://127.0.0.1:8000/api/logger/webhook2/'
+# url = 'http://127.0.0.1:8000/api/logger/webhook2/'
 
 # Die zu sendenden Daten
 
 
-for i in range(2):
+for i in range(45):
     data = {
-        'id_app': 1,
+        'id_app': 5,
         'message_id': 2,
         'message_text': 'Fehler!'
     }

@@ -1,4 +1,6 @@
-FROM nginx:1.25
+FROM nginx:1.25.3
+
+EXPOSE 80
 
 RUN rm /etc/nginx/conf.d/default.conf
-COPY ./nginx.conf /etc/nginx/conf.d
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
