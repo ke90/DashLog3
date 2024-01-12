@@ -326,7 +326,7 @@ function LogTable() {
             </Form>
 
             </div>
-        <DataTable columns={columns} data={filteredData} onRowClicked={handleRowClick} customStyles={customStyles} className="custom-data-table" />
+        <DataTable columns={columns} pagination paginationPerPage={10} paginationRowsPerPageOptions={[10, 20, 30, 50, 100, 500]} data={filteredData} onRowClicked={handleRowClick} customStyles={customStyles} className="custom-data-table" />
 
       <Offcanvas
         show={showOffcanvas}
