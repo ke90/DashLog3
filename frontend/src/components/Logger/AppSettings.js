@@ -67,6 +67,7 @@ function AppSettings() {
                 const response = await axios.post(url_backend + '/api/logger/delete_app/', [selectedApp])
                 if (response.status === 200){
                     dispatch(listApps());
+                    setSelectedApp(null)
                     Swal.fire({
                         title: "Gelöscht!",
                         text: "Die App wurde gelöscht.",
