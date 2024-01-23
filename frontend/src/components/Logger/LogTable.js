@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from "react";
-import DataTable from "react-data-table-component";
-import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
-  Form,
-  Row,
-  Col,
-  Offcanvas,
-  Button,
-  Modal,
   Badge,
+  Button,
+  Col,
+  Form,
+  Modal,
+  Offcanvas,
+  Row,
 } from "react-bootstrap";
-import Kennzahlen from "./Kennzahlen";
-import Chart_failproApp2 from "./Chart_failproApp2";
-import Chart_failproMonat from "./Chart_failproMonat";
-import Chart_appActivity from "./Chart_appActivity";
-import AppSettings from "./AppSettings";
+import DataTable from "react-data-table-component";
 import { useSelector } from "react-redux";
 import url_backend from "../../config";
+import AppSettings from "./AppSettings";
+import Chart_appActivity from "./Chart_appActivity";
+import Chart_failproApp2 from "./Chart_failproApp2";
+import Chart_failproMonat from "./Chart_failproMonat";
+import Kennzahlen from "./Kennzahlen";
 
 function LogTable() {
   const [tableData, setTableData] = useState([]);
@@ -417,7 +417,9 @@ function LogTable() {
                 ) : null}
               </p>
               <p>Uhrzeit: {formatDateToGerman(selectedRow.timestamp)}</p>
-              <p>Meldung: {selectedRow.message_text}</p>
+              <p>
+                Meldung: <code>{selectedRow.message_text}</code>
+              </p>
               {/* Weitere Datenfelder hier anzeigen */}
             </div>
           )}
